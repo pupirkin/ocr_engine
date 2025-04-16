@@ -1,5 +1,5 @@
 from superagi.tools.base_tool import BaseToolkit
-from superagi.tools.ocr_engine.tool1 import EasyOCRTool
+from superagi.tools.external_tools.ocr_engine.tool1 import EasyOCRTool
 
 class EasyOCRToolkit(BaseToolkit):
     name: str = "EasyOCR Toolkit"

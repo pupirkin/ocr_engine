@@ -1,5 +1,5 @@
 from superagi.tools.base_tool import BaseToolkit
-from superagi.tools.external_tools.ocr_engine.tool1 import EasyOCRTool
+from superagi.tools.external_tools.ocr_engine.tool1 import EasyOCRTool  # Путь к инструменту
 
 class EasyOCRToolkit(BaseToolkit):
     name: str = "EasyOCR Toolkit"
@@ -7,3 +7,6 @@ class EasyOCRToolkit(BaseToolkit):
 
     def get_tools(self):
         return [EasyOCRTool()]
+
+    def get_env_keys(self):
+        return []

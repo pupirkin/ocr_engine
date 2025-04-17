@@ -1,1 +1,2 @@
 easyocr
+superagi-tools==1.0.6

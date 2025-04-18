@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 from typing import Type
 from superagi.helper.resource_helper import ResourceHelper
 
-
 class EasyOCRInput(BaseModel):
     file_name: str = Field(..., description="Path of the image file for OCR")
 
@@ -16,12 +15,16 @@ class EasyOCRTool(BaseTool):
     args_schema: Type[BaseModel] = EasyOCRInput
 
     def _execute(self, file_name: str) -> str:
-        final_path = ResourceHelper.get_agent_read_resource_path(file_name)
+        # Temporarily providing dummy values for 'agent' and 'agent_execution'
+        agent = None
+        agent_execution = None
+        
+        final_path = ResourceHelper.get_agent_read_resource_path(file_name, agent=agent, agent_execution=agent_execution)
 
         if not os.path.exists(final_path):
             raise FileNotFoundError(f"File '{file_name}' not found at {final_path}.")
         
-        output_folder = r"SuperAGI\superagi\tools\ocr_engine" 
+        output_folder = r"D:\Ofound\OCR_Results"
         os.makedirs(output_folder, exist_ok=True)
         
         output_file = os.path.join(output_folder, "ocr_result.txt")

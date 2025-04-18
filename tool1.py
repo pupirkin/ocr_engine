@@ -1,11 +1,11 @@
 import os
+import easyocr
 from superagi.tools.base_tool import BaseTool
 from pydantic import BaseModel, Field
 from typing import Type
-import easyocr
 
 class EasyOCRInput(BaseModel):
-    image_path: str = Field(..., description="Path to the image file for OCR")
+    file_name: str = Field(..., description="Path of the image file for OCR")
 
 class EasyOCRTool(BaseTool):
     name: str = "EasyOCR Tool"
@@ -13,25 +13,31 @@ class EasyOCRTool(BaseTool):
     
     args_schema: Type[BaseModel] = EasyOCRInput
 
-    def _execute(self, image_path: str = None) -> str:
-        output_folder = r"D:\SuperAGI\superagi\tools\ocr_engine"
-        os.makedirs(output_folder, exist_ok=True)  
+    def _execute(self, file_name: str) -> str:
+        final_path = ResourceHelper.get_agent_read_resource_path(file_name)
+
+        if not os.path.exists(final_path):
+            raise FileNotFoundError(f"File '{file_name}' not found at {final_path}.")
+        
+        output_folder = r"SuperAGI\superagi\tools\ocr_engine" 
+        os.makedirs(output_folder, exist_ok=True)
         
         output_file = os.path.join(output_folder, "ocr_result.txt")
         
-        reader = easyocr.Reader(['en'])  # Specify the language(s)
-        result = reader.readtext(image_path)
-        text = ' '.join([item[1] for item in result])  # Extract text from OCR result
+        reader = easyocr.Reader(['en'])
+        result = reader.readtext(final_path)
+        
+        text = ' '.join([item[1] for item in result])
         
         with open(output_file, "w") as file:
             file.write(text)
+
+        print(f"OCR result saved to: {output_file}")
         
-        print(f"Results saved to: {output_file}")
         return text
 
-image_path = r"D:\SuperAGI\superagi\tools\ocr_engine\test_screenshot1.png"
-
+file_name = "test_screenshot1.png"
 ocr_tool = EasyOCRTool()
-text = ocr_tool._execute(image_path=image_path)
+extracted_text = ocr_tool._execute(file_name=file_name)
 
-print("Extracted text:", text)
+print("Extracted Text:", extracted_text)

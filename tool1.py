@@ -14,7 +14,7 @@ class EasyOCRTool(BaseTool):
     args_schema: Type[BaseModel] = EasyOCRInput
 
     def _execute(self, image_path: str = None) -> str:
-        output_folder = r"D:\Ofound\OCR_Results"
+        output_folder = r"D:\SuperAGI\superagi\tools\ocr_engine"
         os.makedirs(output_folder, exist_ok=True)  
         
         output_file = os.path.join(output_folder, "ocr_result.txt")
@@ -29,7 +29,7 @@ class EasyOCRTool(BaseTool):
         print(f"Results saved to: {output_file}")
         return text
 
-image_path = r"D:\Ofound\test_screenshot1.png"
+image_path = r"D:\SuperAGI\superagi\tools\ocr_engine\test_screenshot1.png"
 
 ocr_tool = EasyOCRTool()
 text = ocr_tool._execute(image_path=image_path)

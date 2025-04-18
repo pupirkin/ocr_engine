@@ -3,6 +3,8 @@ import easyocr
 from superagi.tools.base_tool import BaseTool
 from pydantic import BaseModel, Field
 from typing import Type
+from superagi.helper.resource_helper import ResourceHelper
+
 
 class EasyOCRInput(BaseModel):
     file_name: str = Field(..., description="Path of the image file for OCR")

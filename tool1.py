@@ -8,17 +8,14 @@ from superagi.tools.base_tool import BaseTool
 from superagi.models.agent import Agent
 from superagi.types.storage_types import StorageType
 from superagi.config.config import get_config
-from superagi.lib.logger import logger
 from PIL import Image
 import pdf2image
 from io import BytesIO
 from superagi.helper.s3_helper import S3Helper
 
-
 class ScanDocumentSchema(BaseModel):
     """Input for OCR Scan Document Tool."""
     file_name: str = Field(..., description="Path of the document (image/pdf) to scan")
-
 
 class ScanDocumentTool(BaseTool):
     """
@@ -33,7 +30,7 @@ class ScanDocumentTool(BaseTool):
     agent_execution_id: int = None
     args_schema: Type[BaseModel] = ScanDocumentSchema
     description: str = "Scans documents (images or PDFs) and extracts text using EasyOCR"
-    
+
     def _execute(self, file_name: str):
         """
         Execute the scan document tool.

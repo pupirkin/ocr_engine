@@ -1,7 +1,7 @@
+from pydantic import BaseModel, Field
 import os
 from typing import Type, Optional
 import easyocr
-from pydantic import BaseModel, Field
 from superagi.helper.resource_helper import ResourceHelper
 from superagi.models.agent_execution import AgentExecution
 from superagi.tools.base_tool import BaseTool
@@ -41,11 +41,8 @@ class EasyOCRTool(BaseTool):
         Returns:
             The extracted text from the document.
         """
-        # Fetch the final file path using the ResourceHelper
-        final_path = ResourceHelper.get_agent_read_resource_path(file_name, agent=Agent.get_agent_from_id(
-            session=self.toolkit_config.session, agent_id=self.agent_id), agent_execution=AgentExecution
-                                                                 .get_agent_execution_from_id(session=self.toolkit_config.session,
-                                                                                              agent_execution_id=self.agent_execution_id))
+        # Direct file path for testing
+        final_path = r"D:\SuperAGI\CoverLetterSIGMA.pdf"  # Update with the direct path to the PDF file
 
         temporary_file_path = None
         final_name = final_path.split('/')[-1]

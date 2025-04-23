@@ -41,8 +41,8 @@ class EasyOCRTool(BaseTool):
         Returns:
             The extracted text from the document.
         """
-        # Direct file path for testing
-        final_path = r"D:\SuperAGI\CoverLetterSIGMA.pdf"  # Update with the direct path to the PDF file
+        # Explicitly setting the full path to the file (Update this to your file's actual path)
+        final_path = r"D:\SuperAGI\CoverLetterSIGMA.pdf"  # Set the correct full path to the file here
 
         temporary_file_path = None
         final_name = final_path.split('/')[-1]

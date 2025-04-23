@@ -17,7 +17,7 @@ class ScanDocumentSchema(BaseModel):
     """Input for OCR Scan Document Tool."""
     file_name: str = Field(..., description="Path of the document (image/pdf) to scan")
 
-class ScanDocumentTool(BaseTool):
+class EasyOCRTool(BaseTool):
     """
     Scan Document tool with EasyOCR.
     Attributes:

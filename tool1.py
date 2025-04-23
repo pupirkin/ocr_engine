@@ -41,9 +41,15 @@ class EasyOCRTool(BaseTool):
         Returns:
             The extracted text from the document.
         """
-        # Explicitly setting the full path to the file (Update this to your file's actual path)
-        final_path = r"D:\SuperAGI\CoverLetterSIGMA.pdf"  # Set the correct full path to the file here
+        # Set file path to the specific document
+        file_directory = r"D:\SuperAGI"  # Directory where the files are located
+        final_path = os.path.join(file_directory, file_name)  # Combine directory and file name
 
+        # Check if the file exists
+        if not os.path.exists(final_path):
+            raise FileNotFoundError(f"File '{file_name}' not found at {final_path}")
+
+        # Temporary file path if needed for S3 or other storage (if applicable)
         temporary_file_path = None
         final_name = final_path.split('/')[-1]
 
@@ -59,8 +65,8 @@ class EasyOCRTool(BaseTool):
                     f.write(contents)
 
         # If the file doesn't exist or is not found
-        if final_path is None or not os.path.exists(final_path) and temporary_file_path is None:
-            raise FileNotFoundError(f"File '{file_name}' not found.")
+        if not os.path.exists(final_path) and temporary_file_path is None:
+            raise FileNotFoundError(f"File '{file_name}' not found at {final_path}")
 
         # Set directory and create if not exists
         directory = os.path.dirname(final_path)
@@ -71,19 +77,20 @@ class EasyOCRTool(BaseTool):
 
         # Extract text from images using EasyOCR
         reader = easyocr.Reader(['en'])
+        text = ""
+
+        # Process PDF, PNG, and JPG files
         if final_path.lower().endswith('.pdf'):
             # Convert PDF to images and extract text from each page
             images = pdf2image.convert_from_path(final_path)
-            text = ""
             for image in images:
-                # Perform OCR on the image
                 text += reader.readtext(image)
         elif final_path.lower().endswith('.jpg') or final_path.lower().endswith('.jpeg') or final_path.lower().endswith('.png'):
             # Perform OCR directly on image files
             image = Image.open(final_path)
-            text = reader.readtext(image)
+            text += reader.readtext(image)
         else:
-            # For other formats (epub, txt, csv, etc.), the existing logic is retained.
+            # For other formats (epub, txt, csv, etc.), process them if needed
             text = self._process_other_file_types(final_path)
 
         # Remove temporary file if it was used

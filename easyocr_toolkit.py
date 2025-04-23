@@ -1,6 +1,5 @@
 from superagi.tools.base_tool import BaseToolkit
-from superagi.tools.external_tools.ocr_engine.tool1 import ScanDocumentTool  # Correct import path
-# Ensure the right import from the tool1 file
+from superagi.tools.external_tools.ocr_engine.tool1 import EasyOCRTool  # Correct import path for EasyOCRTool
 
 class EasyOCRToolkit(BaseToolkit):
     """
@@ -13,7 +12,7 @@ class EasyOCRToolkit(BaseToolkit):
         """
         This method returns the list of tools included in this toolkit.
         """
-        return [ScanDocumentTool()]  # Correct tool name from tool1
+        return [EasyOCRTool()]  # Correct tool name from tool1
 
     def get_env_keys(self):
         """

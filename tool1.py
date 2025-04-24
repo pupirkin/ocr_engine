@@ -76,7 +76,7 @@ class EasyOCRTool(BaseTool):
             final_path = temporary_file_path
 
         # Extract text from images using EasyOCR
-        reader = easyocr.Reader(['en'])
+        reader = easyocr.Reader(['de','en'])
         text = ""
 
         # Process PDF, PNG, and JPG files

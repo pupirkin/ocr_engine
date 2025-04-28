@@ -1,5 +1,5 @@
 from superagi.tools.base_tool import BaseToolkit
-from superagi.tools.external_tools.ocr_engine.tool1 import ScanDocumentTool  # Импорт правильного класса
+from superagi.tools.external_tools.ocr_engine.tool1 import EasyOCRTool  # Keep import EasyOCRTool
 
 class EasyOCRToolkit(BaseToolkit):
     """
@@ -12,7 +12,7 @@ class EasyOCRToolkit(BaseToolkit):
         """
         This method returns the list of tools included in this toolkit.
         """
-        return [ScanDocumentTool()]  # Тоже поменяли на ScanDocumentTool
+        return [EasyOCRTool()]  # Return your original tool
 
     def get_env_keys(self):
         """

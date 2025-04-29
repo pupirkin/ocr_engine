@@ -18,4 +18,4 @@ class EasyOCRToolkit(BaseToolkit):
         """
         This method defines environment keys needed by the toolkit.
         """
-        return []
+        return []  # Empty list if no environment variables are required

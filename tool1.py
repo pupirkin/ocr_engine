@@ -15,7 +15,7 @@ from superagi.helper.s3_helper import S3Helper
 
 class ScanDocumentSchema(BaseModel):
     """Input for OCR Scan Document Tool."""
-    file_name: str = Field(..., description="Path of the document (image/pdf) to scan")
+    file_name: str = Field(..., description="Name of the document (image/pdf) to scan")
 
 class EasyOCRTool(BaseTool):
     """
@@ -41,16 +41,19 @@ class EasyOCRTool(BaseTool):
         Returns:
             The extracted text from the document.
         """
-        # Set the final file path
-        final_path = ResourceHelper.get_agent_read_resource_path(
-            file_name,
-            agent=Agent.get_agent_from_id(self.toolkit_config.session, self.agent_id),
-            agent_execution=AgentExecution.get_agent_execution_from_id(self.toolkit_config.session, self.agent_execution_id)
-        )
+        # Set the directory where the files are located
+        directory = "D:/SuperAGI/workspace/input/files"  # Update with the correct directory
+
+        # Construct the full file path
+        final_path = os.path.join(directory, file_name)
 
         temporary_file_path = None
 
-        # Handle S3 storage
+        # Check if the file exists
+        if not os.path.exists(final_path):
+            raise FileNotFoundError(f"File '{file_name}' not found in directory '{directory}'.")
+
+        # Handle S3 storage if needed
         if StorageType.get_storage_type(get_config("STORAGE_TYPE", StorageType.FILE.value)) == StorageType.S3:
             if final_path.lower().endswith('.txt'):
                 return S3Helper().read_from_s3(final_path)
@@ -59,10 +62,6 @@ class EasyOCRTool(BaseTool):
                 with open(temporary_file_path, "wb") as f:
                     contents = S3Helper().read_binary_from_s3(final_path)
                     f.write(contents)
-
-        # Check if the final path exists
-        if not os.path.exists(final_path) and temporary_file_path is None:
-            raise FileNotFoundError(f"File '{file_name}' not found.")
 
         if temporary_file_path is not None:
             final_path = temporary_file_path
@@ -83,10 +82,10 @@ class EasyOCRTool(BaseTool):
             result = reader.readtext(image, detail=0)
             text = " ".join(result)
         else:
-            # Other files (txt, csv, epub)
+            # For other formats (txt, csv, epub)
             text = self._process_other_file_types(final_path)
 
-        # Remove temporary file
+        # Remove temporary file if it was used
         if temporary_file_path is not None:
             os.remove(temporary_file_path)
 

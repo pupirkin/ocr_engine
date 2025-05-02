@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 import os
-from typing import Type, Optional
+from typing import Type
 import easyocr
 from superagi.helper.resource_helper import ResourceHelper
 from superagi.models.agent_execution import AgentExecution
@@ -41,8 +41,8 @@ class EasyOCRTool(BaseTool):
         Returns:
             The extracted text from the document.
         """
-        # Set the directory where the files are located
-        directory = "D:/SuperAGI/workspace/input/files"  # Update with the correct directory
+        # Set the directory where the files are located (must be mounted in Docker)
+        directory = "/app/input/files"  # Change to the Docker-mounted path
 
         # Construct the full file path
         final_path = os.path.join(directory, file_name)
@@ -72,6 +72,7 @@ class EasyOCRTool(BaseTool):
 
         # Process PDFs
         if final_path.lower().endswith('.pdf'):
+            # Convert PDF to images and extract text from each page
             images = pdf2image.convert_from_path(final_path)
             for image in images:
                 result = reader.readtext(image, detail=0)  # detail=0 returns only text
